@@ -3,12 +3,13 @@ import axios from 'axios';
 import QRCode from "react-qr-code";
 
 import './Result.css';
+import {routePath, site_url, url_prefix} from "../utils/constants";
 
 function Result() {
 
     const [images, setImages] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState({});
+    const [selectedImage, setSelectedImage] = useState(null);
     const [email, setEmail] = useState("");
 
     const fetchImages = async () => {
@@ -39,6 +40,8 @@ function Result() {
     if (images.length < 1) {
         return null
     }
+
+    console.log(ConcatQRcodeString('https://i.imgur.com//I7EcnFT.png'))
 
     return (
         <div className="Container">
@@ -104,7 +107,7 @@ function Result() {
 
                     <div className="Right">
 
-                        <QRCode value={selectedImage}/>
+                        <QRCode value={ConcatQRcodeString(selectedImage)}/>
 
                         <label>留下你的 Email，我們將把照片 Email 給你</label>
                         <input
@@ -128,5 +131,13 @@ function Result() {
         </div>
     );
 }
+
+const ConcatQRcodeString = (imageURL) => {
+    if(!imageURL) {
+        return ""
+    }
+    let cutURL = imageURL.substring(url_prefix.length);
+    return site_url + routePath.Mobile + '/' + cutURL;
+};
 
 export default Result;
