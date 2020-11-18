@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 import QRCode from "react-qr-code";
+import { useHistory } from 'react-router-dom';
 
 import './Result.css';
 import {routePath, site_url, url_prefix} from "../utils/constants";
+import Swal from "sweetalert2";
 
 function Result() {
+
+    const history = useHistory();
 
     const [images, setImages] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,11 +41,27 @@ function Result() {
         setSelectedImage(imageURL);
     };
 
+    const onSendEmail = async () => {
+        setIsModalOpen(false);
+
+        const result = await Swal.fire({
+            title: 'Success!',
+            text: "成功寄出照片到你 Email！",
+            icon: 'success',
+            // showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            // cancelButtonColor: '#d33',
+            confirmButtonText: '回到主畫面'
+        });
+
+        if (result.value) {
+            history.push(routePath.Home);
+        }
+    };
+
     if (images.length < 1) {
         return null
     }
-
-    console.log(ConcatQRcodeString('https://i.imgur.com//I7EcnFT.png'))
 
     return (
         <div className="Container">
@@ -117,7 +137,7 @@ function Result() {
                         />
 
 
-                        <div className="Button" onClick={() => setIsModalOpen(false)}>
+                        <div className="Button" onClick={onSendEmail}>
                             確認
                         </div>
 
