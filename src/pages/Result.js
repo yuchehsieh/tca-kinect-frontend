@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 import QRCode from "react-qr-code";
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 import './Result.css';
 import {routePath, site_url, url_prefix} from "../utils/constants";
-import Swal from "sweetalert2";
 
 function Result() {
 
@@ -14,7 +13,6 @@ function Result() {
     const [images, setImages] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [email, setEmail] = useState("");
 
     const fetchImages = async () => {
         const response = await axios({
@@ -32,31 +30,14 @@ function Result() {
         fetchImages();
     }, []);
 
-    const onChange = (e) => {
-        setEmail(e.target.value)
-    };
-
     const onAlbumImageClick = (imageURL) => {
         setIsModalOpen(true);
         setSelectedImage(imageURL);
     };
 
-    const onSendEmail = async () => {
-        setIsModalOpen(false);
-
-        const result = await Swal.fire({
-            title: 'Success!',
-            text: "成功寄出照片到你 Email！",
-            icon: 'success',
-            // showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            // cancelButtonColor: '#d33',
-            confirmButtonText: '回到主畫面'
-        });
-
-        if (result.value) {
-            history.push(routePath.Home);
-        }
+    const onBackToHome = async () => {
+        history.push(routePath.Home);
+        // setIsModalOpen(false);
     };
 
     if (images.length < 1) {
@@ -67,42 +48,26 @@ function Result() {
         <div className="Container">
 
             <div className="Big-Title">
-                挑選一張喜歡的！
+                挑選你的數位分身
             </div>
 
-            <div className="Flex-Element">
-                <div
-                    onClick={() => onAlbumImageClick(images[images.length - 1]?.link)}
-                    style={{
-                        width: "30vw",
-                        height: "30vh",
-                        background: `url(${images[images.length - 1]?.link}) center center / contain no-repeat`,
-                    }}
-                />
-            </div>
-
-            <div className="Flex-Element">
-                <div
-                    onClick={() => onAlbumImageClick(images[images.length - 2]?.link)}
-                    style={{
-                        width: "30vw",
-                        height: "30vh",
-                        background: `url(${images[images.length - 2]?.link}) center center / contain no-repeat`,
-                    }}
-                />
-            </div>
-
-            <div className="Flex-Element">
-                <div
-                    onClick={() => onAlbumImageClick(images[images.length - 3]?.link)}
-                    style={{
-                        width: "30vw",
-                        height: "30vh",
-                        background: `url(${images[images.length - 3]?.link}) center center / contain no-repeat`,
-                    }}
-                />
-            </div>
-
+            {
+                Array.from(Array(16)).map((item, index) => {
+                    let currentImage = images[images.length - 1 - index];
+                    return (
+                        <div className="Fix-Element" key={index}>
+                            <div
+                                onClick={() => onAlbumImageClick(currentImage.link)}
+                                style={{
+                                    width: "80%",
+                                    height: "90%",
+                                    background: `url(${currentImage?.link}) center center / contain no-repeat`
+                                }}
+                            />
+                        </div>
+                    )
+                })
+            }
 
             <div className={`Backdrop ${isModalOpen ? "Show" : ""}`} onClick={() => setIsModalOpen(false)}>
 
@@ -115,8 +80,8 @@ function Result() {
 
                         <div
                             style={{
-                                width: "30em",
-                                height: "25em",
+                                width: "70%",
+                                height: "80%",
                                 background: `url(${selectedImage}) center center / contain no-repeat`,
                             }}
                         />
@@ -129,16 +94,8 @@ function Result() {
 
                         <QRCode value={ConcatQRcodeString(selectedImage)}/>
 
-                        <label>留下你的 Email，我們將把照片 Email 給你</label>
-                        <input
-                            value={email}
-                            type="email"
-                            onChange={onChange}
-                        />
-
-
-                        <div className="Button" onClick={onSendEmail}>
-                            確認
+                        <div className="Button" onClick={onBackToHome}>
+                            回到主畫面
                         </div>
 
                     </div>
@@ -153,7 +110,7 @@ function Result() {
 }
 
 const ConcatQRcodeString = (imageURL) => {
-    if(!imageURL) {
+    if (!imageURL) {
         return ""
     }
     let cutURL = imageURL.substring(url_prefix.length);

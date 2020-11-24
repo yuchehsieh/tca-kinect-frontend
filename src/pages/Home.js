@@ -10,6 +10,8 @@ function Home() {
         <div className="Home-Container">
             <Link to={routePath.Result}>
                 <div className="Start">
+                    <div className="outer"/>
+                    <div className="inner"/>
                     START 尋找數位替身吧！
                 </div>
             </Link>
