@@ -4,21 +4,23 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    background: url("../assets/images/bg_home.jpg") no-repeat center;
-    background-size: contain;
+    background: url("../assets/images/bg_home.svg") no-repeat center;
+    background-size: cover
+;
 }
 
 .Home-Container .Start {
     color: black;
     border: 5px solid;
     padding: 1em 2em;
-    font-size: 2em;
+    font-size: 4em;
     letter-spacing: 0.2em;
     border-radius: 10px;
     transition: all 0.2s;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
     position: relative;
     /*box-sizing: border-box;*/
+    background: white;
 }
 
 .Home-Container .Start .outer {
