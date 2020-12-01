@@ -10,7 +10,7 @@ import Mobile from "./pages/Mobile";
 function App() {
 
     return (
-        <div className="App">
+        <div className="App" onContextMenu={(e)=> e.preventDefault()}>
             <Router>
                 <Switch>
                     <Route exact path={routePath.Result} component={Result}/>
