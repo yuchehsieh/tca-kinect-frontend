@@ -13,7 +13,7 @@ function Mobile() {
 
 
     const callToDownload = async () => {
-        let imgurURL = url_prefix + url;
+        let imgurURL = url_prefix + url + '.jpg';
         console.log(imgurURL);
 
         let blob = await fetch(imgurURL).then(r => r.blob());
@@ -30,7 +30,7 @@ function Mobile() {
     return (
         <div>
             <img
-                src={url_prefix + url}
+                src={url_prefix + url + '.jpg'}
                 onLoad={() => setDidLoad(true)}
                 style={style}
             />
