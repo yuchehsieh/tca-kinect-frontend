@@ -4,7 +4,7 @@ import QRCode from "react-qr-code";
 import {useHistory} from 'react-router-dom';
 import {FaArrowDown} from 'react-icons/fa';
 
-import { imagesRef } from '../App'
+import {imagesRef} from '../App'
 
 import './Result.css';
 import {routePath, site_url, test_site_url, url_prefix} from "../utils/constants";
@@ -22,15 +22,35 @@ function Result() {
     const [selectedImage, setSelectedImage] = useState(null);
 
     const fetchImages = async () => {
-        const response = await axios({
-            method: 'get',
-            url: 'https://api.imgur.com/3/album/nM0DMMs/images',
-            headers: {
-                'Authorization': 'Client-ID d614e7ae6ec0a06'
-            }
+        const querySnapshot =
+            await imagesRef
+                .where("timestamp", "!=", "")
+                .orderBy("timestamp", "desc")
+                .limit(16)
+                .get();
+
+        let images = [];
+
+        querySnapshot.forEach(q => {
+            let datum = {...q.data(), id: q.id};
+            images.push(datum);
         });
-        let images = response.data.data;
+
+        if (images.length > 16) {
+            images = images.slice(0, 16);
+        }
+
         setImages(images);
+
+        // const response = await axios({
+        //     method: 'get',
+        //     url: 'https://api.imgur.com/3/album/nM0DMMs/images',
+        //     headers: {
+        //         'Authorization': 'Client-ID d614e7ae6ec0a06'
+        //     }
+        // });
+        // let images = response.data.data;
+        // setImages(images);
     };
 
     useEffect(() => {
@@ -49,11 +69,9 @@ function Result() {
                     images.push(datum);
                 });
 
-                if(images.length > 16) {
+                if (images.length > 16) {
                     images = images.slice(0, 16);
                 }
-
-                console.log(images);
 
                 setImages(images);
             });
@@ -111,7 +129,7 @@ function Result() {
                     Array.from(Array(16)).map((item, index) => {
                         let currentImage = images[index];
                         // console.log(currentImage);
-                        if(!currentImage) {
+                        if (!currentImage) {
                             return null;
                         }
 
