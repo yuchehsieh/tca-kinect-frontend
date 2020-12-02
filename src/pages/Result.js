@@ -49,7 +49,7 @@ function Result() {
         <div className="Container">
 
             <div className="Title-Wrapper">
-                <div className="Big-Title" />
+                <div className="Big-Title" onClick={() => fetchImages()}/>
             </div>
 
             <div className="Element-Wrapper">
